@@ -19,6 +19,7 @@ public class ApolloMoominTest {
     String bookName = "Moomin";
 
     By declineCookiesButton = By.xpath("//button[contains(text(), 'Ei nõustu')]");
+    By searchBar = By.id("header-search-input");
 
 
         @BeforeClass
@@ -30,7 +31,7 @@ public class ApolloMoominTest {
 
 
         @Test
-        public void testMoomin(){
+        public void testMoomin() {
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
@@ -38,6 +39,10 @@ public class ApolloMoominTest {
             WebElement declineCookiesElement = wait.until(ExpectedConditions.visibilityOfElementLocated(declineCookiesButton));
             declineCookiesElement.click();
 
+
+            // 2. Find a book
+            driver.findElement(searchBar).click();
+            driver.findElement(searchBar).sendKeys(bookName, Keys.ENTER);
 
         }
 }
