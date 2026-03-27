@@ -2,9 +2,7 @@ package Apollo;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -20,7 +18,9 @@ public class ApolloMoominTest {
 
     By declineCookiesButton = By.xpath("//button[contains(text(), 'Ei nõustu')]");
     By searchBar = By.id("header-search-input");
+    By searchButton = By.xpath("//span[contains(text(), 'Vaata kõiki')]");
 
+    By bookPageItem = By.xpath("//li[contains(@class, 'styles_product-list__item')]");
 
         @BeforeClass
         public void setUp(){
@@ -31,9 +31,9 @@ public class ApolloMoominTest {
 
 
         @Test
-        public void testMoomin() {
+        public void testMoomin(){
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
             // 1. Decline cookies
             WebElement declineCookiesElement = wait.until(ExpectedConditions.visibilityOfElementLocated(declineCookiesButton));
@@ -44,5 +44,18 @@ public class ApolloMoominTest {
             driver.findElement(searchBar).click();
             driver.findElement(searchBar).sendKeys(bookName, Keys.ENTER);
 
+            // 3. Open the book page
+            scrollToJSElement(bookPageItem);
+            WebElement bookElement = wait.until(ExpectedConditions.elementToBeClickable(bookPageItem));
+            bookElement.click();
+
+
+
+        }
+
+        public void scrollToJSElement(By locator){
+            WebElement element = driver.findElement(searchButton);
+            String jsScript = "arguments[0].scrollIntoView();";
+            ((JavascriptExecutor)driver).executeScript(jsScript, element);
         }
 }
