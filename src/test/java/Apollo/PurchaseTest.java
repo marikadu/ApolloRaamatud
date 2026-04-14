@@ -23,12 +23,21 @@ public class PurchaseTest {
 
     By bookPageItem = By.xpath("//li[contains(@class, 'styles_product-list__item')]");
     By availabilityButton = By.xpath("//span[contains(text(), 'Saadavus kauplustes')]");
-    
+
+    By availabilityStatusTallinn = By.xpath("//h3[text()='Tallinn']/following-sibling::ul//span[contains(text(), 'Saadaval')]"); // Get the first available store in Tallinn
     By validatingStore = By.xpath("//p[contains(text(),'Kristiine keskuse Apollo')]");
     By availableStore = By.xpath("//h3[text()='Tallinn']/following-sibling::ul//span[contains(text(), 'Saadaval')]/../../p");
 
-    By storeElementOnList;
+    By closeAvailabilityButton = By.xpath("//button[contains(@class, 'styles_layout-overlay__close')]");
+    By addToCartButton = By.xpath("//span[contains(text(), 'Lisa ostukorvi')]");
+    By cartButtonBy = By.xpath("//span[contains(text(), 'Ava ostukorv')]");
 
+    By proceedToCheckoutBy = By.xpath("//span[contains(text(), 'Vormista ost')]");
+
+    By chooseStoreButton = By.xpath("//span[contains(text(), 'Apollo kauplused')]");
+    By shopList = By.xpath("//input[contains(@aria-controls, 'shop-drop')]");
+    By storeElementOnList;
+    By continueCheckoutButton = By.xpath("//span[contains(text(), 'Jätka')]");
 
     @BeforeClass
     public void setUp(){
@@ -51,9 +60,10 @@ public class PurchaseTest {
         // 2. Find a book
         driver.findElement(searchBar).click();
         driver.findElement(searchBar).sendKeys(bookName, Keys.ENTER);
+//        driver.findElement(searchButton).click();
 
         // 3. Open the book page
-        scrollToJSElement(bookPageItem);
+//        scrollToJSElement(bookPageItem);
         WebElement bookElement = wait.until(ExpectedConditions.elementToBeClickable(bookPageItem));
         bookElement.click();
 
@@ -73,10 +83,36 @@ public class PurchaseTest {
         System.out.println("Available store: " + storeName);
         storeElementOnList = By.xpath("//div[contains(text(), '" + storeName + "')]");
 
+        // 4.4 Close availability menu
+        driver.findElement(closeAvailabilityButton).click();
+
+
+        // 5. Add book to Cart
+        driver.findElement(addToCartButton).click();
+
+        // 6. Order
+        // 6.1 Go to Cart
+        WebElement cartButton = wait.until(ExpectedConditions.visibilityOfElementLocated(cartButtonBy));
+        cartButton.click();
+
+        // 6.2 Proceed to Checkout
+        WebElement checkoutButton = wait.until(ExpectedConditions.visibilityOfElementLocated(proceedToCheckoutBy));
+        checkoutButton.click();
+
+        // 6.3 Choose a Store
+        WebElement chooseStore = wait.until(ExpectedConditions.visibilityOfElementLocated(chooseStoreButton));
+        chooseStore.click();
+
+        driver.findElement(shopList).click();
+        driver.findElement(shopList).sendKeys(storeName, Keys.ENTER); // Type in the store name
+
+        driver.findElement(storeElementOnList).click(); // Choose the store
+        driver.findElement(continueCheckoutButton).click(); // Continue
+
     }
 
     public void scrollToJSElement(By locator){
-        WebElement element = driver.findElement(searchButton);
+        WebElement element = driver.findElement(locator);
         String jsScript = "arguments[0].scrollIntoView();";
         ((JavascriptExecutor)driver).executeScript(jsScript, element);
     }
