@@ -19,12 +19,10 @@ public class PurchaseTest {
 
     By declineCookiesButton = By.xpath("//button[contains(text(), 'Ei nõustu')]");
     By searchBar = By.id("header-search-input");
-    By searchButton = By.xpath("//span[contains(text(), 'Vaata kõiki')]");
 
     By bookPageItem = By.xpath("//li[contains(@class, 'styles_product-list__item')]");
     By availabilityButton = By.xpath("//span[contains(text(), 'Saadavus kauplustes')]");
 
-    By availabilityStatusTallinn = By.xpath("//h3[text()='Tallinn']/following-sibling::ul//span[contains(text(), 'Saadaval')]"); // Get the first available store in Tallinn
     By validatingStore = By.xpath("//p[contains(text(),'Kristiine keskuse Apollo')]");
     By availableStore = By.xpath("//h3[text()='Tallinn']/following-sibling::ul//span[contains(text(), 'Saadaval')]/../../p");
 
@@ -38,6 +36,14 @@ public class PurchaseTest {
     By shopList = By.xpath("//input[contains(@aria-controls, 'shop-drop')]");
     By storeElementOnList;
     By continueCheckoutButton = By.xpath("//span[contains(text(), 'Jätka')]");
+
+    By firstNameField = By.id("firstname");
+    By lastNameField = By.id("lastname");
+    By emailField = By.id("email");
+    By telephoneField = By.id("telephone");
+    By continueToPaymentButton = By.xpath("//span[contains(text(), 'Edasi')]");
+
+
 
     @BeforeClass
     public void setUp(){
@@ -60,10 +66,8 @@ public class PurchaseTest {
         // 2. Find a book
         driver.findElement(searchBar).click();
         driver.findElement(searchBar).sendKeys(bookName, Keys.ENTER);
-//        driver.findElement(searchButton).click();
 
         // 3. Open the book page
-//        scrollToJSElement(bookPageItem);
         WebElement bookElement = wait.until(ExpectedConditions.elementToBeClickable(bookPageItem));
         bookElement.click();
 
@@ -109,6 +113,18 @@ public class PurchaseTest {
         driver.findElement(storeElementOnList).click(); // Choose the store
         driver.findElement(continueCheckoutButton).click(); // Continue
 
+
+        // 7. Fill in the contact form
+        WebElement firstName = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
+        firstName.sendKeys("Jane"); // Waiting for the first input field to be valid. The next fields do not require waiting
+
+        driver.findElement(lastNameField).sendKeys("Doe");
+        driver.findElement(emailField).sendKeys("jane.doe@mail.com");
+        driver.findElement(telephoneField).sendKeys("+1234567890");
+
+        scrollToJSElement(continueToPaymentButton);
+        driver.findElement(continueToPaymentButton).click();
+
     }
 
     public void scrollToJSElement(By locator){
@@ -120,7 +136,7 @@ public class PurchaseTest {
 
     @AfterClass
     public void shutDown(){
-//        driver.quit(); // Closed for debugging
+        driver.quit();
     }
 }
 
