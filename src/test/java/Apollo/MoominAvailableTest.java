@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 import java.time.Duration;
 
-public class ApolloMoominTest {
+public class MoominAvailableTest {
 
     WebDriver driver;
 
@@ -37,7 +37,7 @@ public class ApolloMoominTest {
 
 
         @Test
-        public void testMoomin(){
+        public void testFirstMoominBookAvailable(){
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
@@ -56,7 +56,7 @@ public class ApolloMoominTest {
             bookElement.click();
 
 
-            // 4. Check the status
+            // 4. Check the availability
 
             // 4.1 Click on the Availability Button
             WebElement availabilityElement = wait.until(ExpectedConditions.elementToBeClickable(availabilityButton));
